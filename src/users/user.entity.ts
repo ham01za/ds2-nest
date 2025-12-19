@@ -1,33 +1,29 @@
-import { Module } from '@nestjs/common';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Role } from './enums/role.enum';
+import { Intervention } from '../interventions/intervention.entity';
 
-@Module({})
-export class UsersModule {
-    ADMIN = 'ADMIN';
-    TECH = 'TECH';
-}
 @Entity()
 export class User {
-@PrimaryGeneratedColumn()
-id: number;
 
-  // Email unique
-@Column({ unique: true })
-email: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  // Mot de passe
-@Column()
-password: string;
+  @Column({ unique: true })
+  email: string;
 
-  // Nom d'utilisateur
-@Column()
-username: string;
+  @Column()
+  password: string;
 
-  
+  @Column()
+  username: string;
+
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.TECH,
-})
- role: UserRole;
+    enum: Role,
+    default: Role.TECH,
+  })
+  role: Role;
+
+  @OneToMany(() => Intervention, intervention => intervention.user)
+  interventions: Intervention[];
 }
